@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Interactive plant gas exchange simulator for Form 2 science students.">
+  <title>Plant Gas Exchange Simulator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Form 2 Science</p>
+        <h1>Gas Exchange in Plants</h1>
+        <p class="subtitle">Compare gas exchange in a plant during the day and at night.</p>
+      </div>
+
+      <div class="mode-control" aria-label="Select time of day">
+        <span class="mode-label">☀️ Day</span>
+        <label class="switch">
+          <input id="modeToggle" type="checkbox" aria-label="Switch between day and night">
+          <span class="slider"></span>
+        </label>
+        <span class="mode-label">🌙 Night</span>
+      </div>
+    </header>
+
+    <section class="scene-card">
+      <div id="scene" class="scene day" aria-live="polite">
+        <div class="scene-label" id="sceneLabel">DAY TIME</div>
+
+        <svg class="leaf" viewBox="0 0 500 320" role="img" aria-label="Green leaf">
+          <defs>
+            <linearGradient id="leafFill" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6ed66f"/>
+              <stop offset="100%" stop-color="#1f8c4b"/>
+            </linearGradient>
+          </defs>
+          <path class="leaf-body" d="M56 182 C110 55, 325 24, 448 76 C398 231, 227 293, 84 250 C58 242, 42 219, 56 182 Z"/>
+          <path class="midrib" d="M75 226 C165 190, 265 145, 420 92"/>
+          <path class="vein" d="M141 197 C132 154, 126 131, 114 107"/>
+          <path class="vein" d="M205 170 C192 119, 185 94, 174 73"/>
+          <path class="vein" d="M275 145 C264 106, 259 76, 254 56"/>
+          <path class="vein" d="M339 120 C336 90, 335 70, 338 55"/>
+          <path class="vein" d="M150 192 C175 220, 198 237, 229 253"/>
+          <path class="vein" d="M220 165 C246 202, 270 221, 301 236"/>
+          <path class="vein" d="M291 141 C315 170, 340 188, 367 200"/>
+          <path class="stem" d="M77 226 C42 246, 22 270, 11 294"/>
+        </svg>
+
+        <div class="molecule-counters" aria-live="polite" aria-label="Current gas molecule counts">
+          <div class="counter-pill">
+            <span class="molecule-demo oxygen" aria-hidden="true">
+              <span class="atom oxygen-atom"></span><span class="atom oxygen-atom"></span>
+            </span>
+            <span>O₂ molecules</span>
+            <strong id="oxygenCount">30</strong>
+          </div>
+          <div class="counter-pill">
+            <span class="molecule-demo carbon-dioxide" aria-hidden="true">
+              <span class="atom oxygen-atom"></span><span class="atom carbon-atom"></span><span class="atom oxygen-atom"></span>
+            </span>
+            <span>CO₂ molecules</span>
+            <strong id="carbonDioxideCount">30</strong>
+          </div>
+        </div>
+
+        <div class="gas-key">
+          <div class="key-item">
+            <span class="molecule-demo oxygen" aria-hidden="true">
+              <span class="atom oxygen-atom"></span><span class="atom oxygen-atom"></span>
+            </span>
+            <span>O₂ oxygen</span>
+          </div>
+          <div class="key-item">
+            <span class="molecule-demo carbon-dioxide" aria-hidden="true">
+              <span class="atom oxygen-atom"></span><span class="atom carbon-atom"></span><span class="atom oxygen-atom"></span>
+            </span>
+            <span>CO₂ carbon dioxide</span>
+          </div>
+        </div>
+
+        <div class="net-badge" id="netBadge">Net: CO₂ decreases • O₂ increases</div>
+      </div>
+    </section>
+
+    <section class="rate-grid" aria-label="Process rates">
+      <article class="rate-card">
+        <div class="rate-heading">
+          <h2>Photosynthesis</h2>
+          <span id="photoValue" class="rate-value">8</span>
+        </div>
+        <div class="bar-track"><div id="photoBar" class="bar photosynthesis-bar" style="width:80%"></div></div>
+        <p id="photoText">Fast in the light</p>
+      </article>
+
+      <article class="rate-card">
+        <div class="rate-heading">
+          <h2>Respiration</h2>
+          <span id="respValue" class="rate-value">3</span>
+        </div>
+        <div class="bar-track"><div id="respBar" class="bar respiration-bar" style="width:30%"></div></div>
+        <p>Respiration happens all the time</p>
+      </article>
+    </section>
+
+    <section id="advancedPanel" class="advanced-card">
+      <label class="advanced-toggle">
+        <input id="advancedCheckbox" type="checkbox">
+        <span>
+          <strong>Advanced function</strong>
+          <small>Allow light intensity to affect the daytime photosynthesis rate.</small>
+        </span>
+      </label>
+
+      <div id="lightControls" class="light-controls" hidden>
+        <div class="light-heading">
+          <label for="lightIntensity"><strong>Light intensity</strong></label>
+          <span id="lightValue">100%</span>
+        </div>
+        <input id="lightIntensity" type="range" min="0" max="100" value="100" step="5">
+        <p id="lightHint">Higher light intensity increases the photosynthesis rate in this simplified model.</p>
+      </div>
+    </section>
+
+    <section class="explanation-card">
+      <h2 id="explanationTitle">During the day</h2>
+      <p id="explanationText">
+        The rate of photosynthesis is higher than the rate of respiration. Therefore, the plant has a
+        <strong>net uptake of carbon dioxide</strong> and a <strong>net release of oxygen</strong>.
+      </p>
+      <div class="equation-row" id="equationRow">
+        <span>Photosynthesis rate</span><strong>&gt;</strong><span>Respiration rate</span>
+      </div>
+      <p class="note">The molecule counts and rates are simplified teaching values, not measured physiological values.</p>
+    </section>
+
+    <section class="student-check">
+      <h2>Check your understanding</h2>
+      <p>Which gas has a net movement <strong>into</strong> the leaf in the current scenario?</p>
+      <div class="answer-buttons">
+        <button type="button" data-answer="oxygen">O₂</button>
+        <button type="button" data-answer="carbon-dioxide">CO₂</button>
+      </div>
+      <p id="feedback" class="feedback" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
